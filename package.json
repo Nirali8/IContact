@@ -1,0 +1,24 @@
+{
+  "name": "tsc--init",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test spec ified\" && exit 1",
+    "start": "nodemon server.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonfile": "^6.1.0",
+    "mongoos": "^0.0.1-security",
+    "mongoose": "^8.9.6",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
