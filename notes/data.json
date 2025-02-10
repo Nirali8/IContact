@@ -1,0 +1,14 @@
+[
+    {
+        "name":"Nirali Sanghani",
+        "imageUrl":"https://niralisanghani.my.canva.site/",
+        "email":"nirali.skillqode@gmail.com",
+        "mobile":9909213730,
+        "company":"SkillQode",
+        "title":"Full Stack Developer",
+       "group":{
+         "groupId":1,
+        "groupName":"Learning Backend"
+       }
+    }
+]
