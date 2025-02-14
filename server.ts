@@ -22,7 +22,10 @@ app.get("/", (request: Request, response: Response) => {
 
 //router Configuration
 import groupRouter from "./router/groupRouter"
-app.use("/groups",groupRouter);
+app.use("/groups", groupRouter);
+
+import userRouter from './router/userRouter';
+app.use("/user",userRouter);
 
 if (port) {
     app.listen(Number(port), () => {
