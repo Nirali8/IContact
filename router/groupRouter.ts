@@ -15,6 +15,15 @@ groupRouter.get("/", async (request: Request, response: Response) => {
     await groupController.getAllGroups(request, response);
 })
 
+/*
+     @usage:to get a group
+    @method:GET
+    @param:no-param
+    @url:http://localhost:9999/groups/:groupId
+ */
+groupRouter.get("/:groupId",async(request:Request,response:Response)=>{
+    await groupController.getGroup(request, response);
+})
 
 /*
     @usage : create a group
