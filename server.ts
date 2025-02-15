@@ -25,7 +25,10 @@ import groupRouter from "./router/groupRouter"
 app.use("/groups", groupRouter);
 
 import userRouter from './router/userRouter';
-app.use("/user",userRouter);
+app.use("/user", userRouter);
+
+import contactRouter from './router/contactRouter';
+app.use("/contacts", contactRouter);
 
 if (port) {
     app.listen(Number(port), () => {
