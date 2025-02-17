@@ -38,5 +38,28 @@ contactRouter.post("/",[
     await contactController.createContact(request, response)
 })
 
+/*
+    @usage : update a user
+    @method : PUT
+    @params : name
+    @url : http://localhost:8800/users/userId
+*/
+
+contactRouter.put("/:contactId", async (request: Request, response: Response) => {
+    console.log("pUT contact");
+    await contactController.contactUpdate(request, response);
+})
+
+/*
+     @usage : delete a user
+    @method : DELETE
+    @params : userId
+    @url : http://localhost:8800/users/userId
+ */
+contactRouter.delete("/:contactId", async (request: Request, response: Response) => {
+    console.log("Delete contact");
+    await contactController.deleteContact(request,response)
+   
+})
 
 export default contactRouter;

@@ -37,5 +37,29 @@ userRouter.post("/", async (request: Request, response: Response) => {
     await userController.createUser(request, response)
 })
 
+/*
+    @usage : update a user
+    @method : PUT
+    @params : name
+    @url : http://localhost:8800/users/userId
+*/
+
+userRouter.put("/:userId", async (request: Request, response: Response) => {
+    console.log("pUT User");
+    await userController.userUpdate(request, response);
+})
+
+/*
+     @usage : delete a user
+    @method : DELETE
+    @params : userId
+    @url : http://localhost:8800/users/userId
+ */
+userRouter.delete("/:userId", async (request: Request, response: Response) => {
+    console.log("Delete User");
+    await userController.deleteUser(request,response)
+   
+})
+
 
 export default userRouter;

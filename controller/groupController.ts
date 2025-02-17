@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import GroupsTable from "../database/GroupSchema";
 import { IGroup } from "../models/IGroup";
-import { request } from "http";
 import mongoose from "mongoose";
-import { error } from "console";
-
 
 /*
   @usage : to get all group
@@ -19,14 +16,15 @@ export const getAllGroups = async (request: Request, response: Response) => {
             return response.status(200).json(groups);
         }
     }
-    catch (error:any){
+    catch (error: any) {
         return response.status(500).json({ msg: "Data not Found" });
     }
- }
+}
+
 /*
  @usage : to get a group
   @method :GET
-  @param : no-param
+  @param : groupId
   @url : http://localhost:9988/groups/:groupId
  */
 export const getGroup = async (request: Request, response: Response) => {
@@ -41,16 +39,17 @@ export const getGroup = async (request: Request, response: Response) => {
     }
     return response.status(200).json(theGroup);
 }
+
 /*
     @usage : create a group
     @method : POST
     @params : name
-    @url : http://localhost:9988/groups
+    @url : http://localhost:9988/groups/groupId
  */
 
 export const createGroup = async (request: Request, response: Response) => {
     let { name } = request.body;
-    console.log("create group",name);
+    console.log("create group", name);
     let theGroup: IGroup | null | undefined = await new GroupsTable({
         name: name,
     }).save();
@@ -61,3 +60,40 @@ export const createGroup = async (request: Request, response: Response) => {
         });
     }
 };
+
+/*
+  @usage : to update Group
+  @method :PUT
+  @param : groupId
+  @url : http://localhost:9988/groups/groupId
+ */
+export const updateGroup = async (request: Request, response: Response) => {
+    let { groupId } = request.params;
+    let { name } = request.body;
+    // console.log("create group", name);
+    let updateGroup: IGroup | null | undefined = await GroupsTable.findByIdAndUpdate(groupId, { name }, { new: true });
+    if (updateGroup) {
+        return response.json({
+            data: updateGroup,
+            msg:"Group updated successfully"
+        })
+    }
+}
+
+/*
+  @usage : to Delete Group
+  @method :DELETE
+  @param : groupId
+  @url : http://localhost:9988/groups/groupId
+ */
+
+export const deleteGroup = async (request: Request, response: Response) => {
+    let { groupId } = request.params;
+    let deleteGroup: IGroup | null | undefined = await GroupsTable.findByIdAndDelete(groupId);
+    if (deleteGroup) {
+        return response.json({
+            data: deleteGroup,
+            msg:"Group Deleted successfully"
+        })
+    }
+  }
