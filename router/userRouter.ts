@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import * as userController from "../controller/userController";
-import {body} from "express-validator"
+import { body } from "express-validator";
 const userRouter: Router = Router();
 
 
@@ -28,13 +28,16 @@ userRouter.get("/:userId",async(request:Request,response:Response)=>{
 /*
     @usage : create a user
     @method : POST
-    @params : name
+    @params : username,email,password
     @url : http://localhost:8800/users
 */
 
-userRouter.post("/", async (request: Request, response: Response) => {
-    console.log("post");
-    await userController.createUser(request, response)
+userRouter.post("/register", [
+    body('username').not().isEmpty().withMessage("UserName is required"),
+    body('email').isEmail().withMessage("Proper email is Required"),
+    body('password').isStrongPassword().withMessage("Strong Password is Required")
+],async (request: Request, response: Response) => {
+    await userController.registerUser(request, response)
 })
 
 /*

@@ -1,6 +1,5 @@
 import { Request, Response, Router } from "express";
 import * as contactController from "../controller/contactController";
-import {body} from "express-validator"
 const contactRouter: Router = Router();
 
 

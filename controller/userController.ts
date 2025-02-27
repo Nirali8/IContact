@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { IUser } from "../models/IUser";
+import { validationResult } from "express-validator";
+// import jwt from "jsonwebtoken"
+import bcryptjs from "bcryptjs"
+import gravatar from "gravatar"
 import UserTable from "../database/UserSchema";
 
 
@@ -64,6 +68,59 @@ export const createUser = async (request: Request, response: Response) => {
         });
     }
 };
+export const registerUser = async (request: Request, response: Response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return response.status(400).json({errors:errors.array()})
+    }
+    try {
+        //read the form data
+        let { username, email, password } = request.body;
+        
+        //check if user is exists
+        const userObj = await UserTable.findOne({ email: email });
+        if (userObj) {
+            return response.status(400).json({
+                data:null,
+                error:"The user is already exists"
+            })
+        }
+        //password encryption
+        const salt = await bcryptjs.genSalt(10);
+        const hashPassword = await bcryptjs.hash(password, salt);
+
+        // gravatar url
+        const imageUrl = gravatar.url(email, {
+            size:"200",
+            rating:"pg",
+            default:"mm"
+        })
+
+        //insert to db
+        const newUser: IUser = {
+            username: username,
+            email: email,
+            password: hashPassword,
+            imageUrl: imageUrl,
+            isAdmin:false
+        }
+
+        const theUserObj = await new UserTable(newUser).save();
+        if (theUserObj) {
+            return response.status(200).json({
+                data: theUserObj,
+                msg:"Registration is success!"
+            })
+        }
+        
+    } catch (error: any) {
+        return response.status(500).json({
+            // data:null,
+            error: error.message
+        });
+    }
+ }
+
 
 /*
     @usage : update a user
