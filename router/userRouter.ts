@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import * as userController from "../controller/userController";
 import { body } from "express-validator";
 const userRouter: Router = Router();
+import { TokenMiddleware } from "../middleware/TokenMiddleware";
 
 
 /*
@@ -32,12 +33,25 @@ userRouter.get("/:userId",async(request:Request,response:Response)=>{
     @url : http://localhost:8800/users
 */
 
-userRouter.post("/register", [
+userRouter.post("/register",TokenMiddleware, [
     body('username').not().isEmpty().withMessage("UserName is required"),
     body('email').isEmail().withMessage("Proper email is Required"),
     body('password').isStrongPassword().withMessage("Strong Password is Required")
 ],async (request: Request, response: Response) => {
     await userController.registerUser(request, response)
+})
+
+/*
+    @usage : login user
+    @method : POST
+    @params : email,password
+    @url : http://localhost:8800/users
+*/
+userRouter.post("/login", [
+    body('email').isEmail().withMessage("Proper email is Required"),
+    body('password').isStrongPassword().withMessage("Strong Password is Required")
+],async (request: Request, response: Response) => {
+    await userController.loginUser(request, response)
 })
 
 /*

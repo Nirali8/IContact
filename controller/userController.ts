@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { IUser } from "../models/IUser";
 import { validationResult } from "express-validator";
-// import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import bcryptjs from "bcryptjs"
 import gravatar from "gravatar"
 import UserTable from "../database/UserSchema";
@@ -122,6 +122,69 @@ export const registerUser = async (request: Request, response: Response) => {
  }
 
 
+ /*
+    @usage : login user
+    @method : POST
+    @params : email,password
+    @url : http://localhost:8800/users
+*/
+
+ export const loginUser = async (request: Request, response: Response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return response.status(400).json({errors:errors.array()})
+    }
+    try {
+        //read the form data
+        let {  email, password } = request.body;
+        
+        //check if user is exists
+        const userObj :IUser|undefined|null= await UserTable.findOne({ email: email });
+        if (!userObj) {
+            return response.status(400).json({
+                data:null,
+                error:"The user is not exists"
+            })
+        }
+        //check for password
+        console.log("password",userObj.password);
+        
+        let isMatch: boolean = await bcryptjs.compare(password, userObj.password);
+        if (!isMatch) {
+            return response.status(500).json({
+                error:"Invalid Password"
+            })
+        }
+
+        //create a token
+        const secretKey: string | undefined = process.env.JWT_SECRET_KEY;
+        const payload: any = {
+            user: {
+                id: userObj._id,
+                email: userObj.email
+            }
+        };
+        if (secretKey && payload) {
+            jwt.sign(payload, secretKey, {
+                expiresIn:100000000000
+            }, (error, encoded) => {
+                if (error) throw error;
+                if (encoded) {
+                    return response.status(200).json({
+                        token: encoded,
+                        data: userObj,
+                        msg:"Login is Success!"
+                    })
+                }
+            })
+        }        
+    } catch (error: any) {
+        return response.status(500).json({
+            // data:null,
+            error: error.message
+        });
+    }
+ }
 /*
     @usage : update a user
     @method : PUT
